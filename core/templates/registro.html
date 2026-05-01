@@ -1,32 +1,139 @@
-{% extends 'base.html' %}
-{% block content %}
-<h2>Registro</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro</title>
 
+    <style>
+        html, body {
+            height: 100%;
+        }
 
-<form method="POST">
-    {% csrf_token %}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    <label>Nombre:</label>
-    {{ form.username }}
+        .card {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            width: 340px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            box-sizing: border-box;
+        }
 
-    <label>Email:</label>
-    {{ form.email }}
+        h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
 
-    <label>Contraseña:</label>
-    {{ form.password }}
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
 
-    <label>Confirmar contraseña:</label>
-    {{ form.password2 }}
+        input:focus {
+            border-color: #4a47cc;
+            box-shadow: 0 0 6px rgba(102,126,234,0.5);
+        }
 
-    <label>Rol:</label>
-    {{ form.rol }}
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-    <button type="submit">Registrarse</button>
-</form>
+        button:hover {
+            background: #4a47cc;
+        }
 
-{% if form.errors %}
-    <div style="color:red;">
+        .error {
+            margin-top: 10px;
+            background: #ffe5e5;
+            color: #b00020;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #4a47cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        background: white;
+        transition: 0.3s;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 14px;
+        }
+
+        select:focus {
+            border-color: #4a47cc;
+            box-shadow: 0 0 6px rgba(102,126,234,0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    {% load static %}
+    <img src="{% static 'image/logo.png' %}" alt="Logo" height="100">
+    <h2>Registro</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="username" placeholder="Usuario" required>
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <input type="password" name="password2" placeholder="Confirmar contraseña" required>
+        {{ form.rol }}
+        <button type="submit">Registrarse</button>
+    </form>
+
+    {% if form.errors %}
+    <div class="error">
         {{ form.errors }}
     </div>
-{% endif %}
-{% endblock %}
+    {% endif %}
+
+    <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+</div>
+
+</body>
+</html>

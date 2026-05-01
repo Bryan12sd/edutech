@@ -1,22 +1,95 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
 
-{% block content %}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           background: linear-gradient(135deg, #0f172a, #1e293b);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            width: 320px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        
+        }
+
+        .card h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .card input {
+            width: 90%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .card input:focus {
+            border-color: #4a47cc;
+            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+        }
+
+        .card button {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+
+        }
+
+        .card button:hover {
+            background:  #4a47cc;
+        }
+        a {
+            color: #4a47cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+         a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
 <div class="card">
+    {% load static %}
+    <img src="{% static 'image/logo.png' %}" alt="Logo" height="100">
     <h2>Iniciar Sesión</h2>
 
     <form method="POST">
         {% csrf_token %}
 
-        <input type="text" name="username" placeholder="Usuario" required>
+        <input type="text" name="username" placeholder="Email" required>
         <input type="password" name="password" placeholder="Contraseña" required>
 
         <button type="submit">Ingresar</button>
     </form>
 
     {% if form.errors %}
-        <p style="color:red;">Usuario o contraseña incorrectos</p>
+    <p style="color:red;">Usuario o contraseña incorrectos</p>
     {% endif %}
 
     <p>No tienes cuenta? <a href="/registro/">Regístrate</a></p>
 </div>
-{% endblock %}
+</body>
+</html>

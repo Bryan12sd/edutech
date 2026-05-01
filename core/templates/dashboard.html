@@ -2,10 +2,11 @@
 
 {% block content %}
 <div class="card">
-    <h2>Dashboard</h2>
+    <h2>Bienvenido  {{ request.user.estudiante.nombre }}</h2>
+    <p>Accede a tu información académica</p>
 
     <a href="/calificaciones/">
-        <button>Ver Calificaciones</button>
+        <button class="btn">Ver mis calificaciones</button>
     </a>
 </div>
 {% endblock %}

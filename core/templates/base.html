@@ -3,73 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <title>{% block title %}EduTech{% endblock %}</title>
 
     <style>
         body {
-            font-family: Arial;
             margin: 0;
-            background: #f4f6f9;
+            font-family: 'Segoe UI';
+            background: #f1f5f9;
         }
 
-        header {
-            background: #2c3e50;
+        /* TOP BAR */
+        .topbar {
+            background: #0f172a;
             color: white;
             padding: 15px;
-            text-align: center;
+            display: flex;
+            align-items: center;
         }
 
+        .menu-btn {
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        /* DRAWER */
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: #1e293b;
+            color: white;
+            padding-top: 60px;
+            transition: 0.3s;
+        }
+
+        .drawer a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .drawer a:hover {
+            background: #334155;
+        }
+
+        /* CONTENIDO */
         .container {
             padding: 20px;
+            transition: margin-left 0.3s;
         }
 
+        /* CUANDO SE ABRE */
+        .drawer.open {
+            left: 0;
+        }
+
+        .container.shift {
+            margin-left: 250px;
+        }
+
+        /* CARDS */
         .card {
             background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        input, select {
-            padding: 8px;
-            margin: 5px 0;
-            width: 100%;
-        }
-
-        button {
-            padding: 10px;
-            background: #3498db;
+        /* BOTONES */
+        .btn {
+            background: #2563eb;
             color: white;
+            padding: 10px;
             border: none;
+            border-radius: 5px;
+        }
+         .btnWhite {
+            background: #ffff;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 22px;
             cursor: pointer;
+            color: white;
         }
 
         /* RESPONSIVE */
-        @media (max-width: 600px) {
-            header {
-                font-size: 14px;
+        @media (max-width: 768px) {
+            .container.shift {
+                margin-left: 0;
             }
         }
     </style>
 </head>
+
 <body>
 
-<header>
-    <h1>EduTech</h1>
+<!-- TOP BAR -->
+<div class="topbar" style="display:flex; align-items:center;">
 
+    <span class="menu-btn" onclick="toggleDrawer()">☰</span>
+
+
+    <strong style="margin-left:10px;">EduTech</strong>
     {% if request.user.is_authenticated %}
-    <p>Bienvenido, {{ request.user.username }}</p>
-
-    <form action="{% url 'logout' %}" method="post">
+    <form action="{% url 'logout' %}" method="post" style="margin-left:auto;">
         {% csrf_token %}
-        <button type="submit">Cerrar sesión</button>
+        <button class="btnWhite" type="submit">Cerrar sesión</button>
     </form>
     {% endif %}
-</header>
 
-<div class="container">
+</div>
+
+<!-- DRAWER -->
+<div id="drawer" class="drawer">.
+
+    <span class="close-btn" onclick="toggleDrawer()">
+    <i class="fas fa-times"></i>
+</span>
+    {% if user.is_authenticated %}
+    <a href="/dashboard/">Dashboard</a>
+    <a href="/calificaciones/">Mis Calificaciones</a>
+
+    {% else %}
+    <a href="/">Login</a>
+    <a href="/registro/">Registro</a>
+    {% endif %}
+</div>
+
+<!-- CONTENIDO -->
+<div id="main" class="container">
     {% block content %}{% endblock %}
 </div>
+
+<script>
+    function toggleDrawer() {
+        const drawer = document.getElementById('drawer');
+        const main = document.getElementById('main');
+
+        drawer.classList.toggle('open');
+        main.classList.toggle('shift');
+
+        // Guardar estado
+        if (drawer.classList.contains('open')) {
+            localStorage.setItem('drawer', 'open');
+        } else {
+            localStorage.setItem('drawer', 'closed');
+        }
+    }
+
+    // Mantener estado al recargar o cambiar de página
+    window.onload = function() {
+        const drawer = document.getElementById('drawer');
+        const main = document.getElementById('main');
+
+        const estado = localStorage.getItem('drawer');
+
+        if (estado === 'open') {
+            drawer.classList.add('open');
+            main.classList.add('shift');
+        }
+    }
+</script>
 
 </body>
 </html>
