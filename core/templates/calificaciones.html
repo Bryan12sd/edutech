@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>Calificaciones</h2>
+
+    <input type="text" id="busqueda" placeholder="Buscar estudiante...">
+
+    <select id="ordenar">
+        <option value="">Ordenar</option>
+        <option value="asc">Nota Ascendente</option>
+        <option value="desc">Nota Descendente</option>
+    </select>
+
+    <table border="1" width="100%" id="tabla">
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Curso</th>
+                <th>Nota</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in calificaciones %}
+            <tr>
+                <td class="nombre">{{ c.estudiante.nombre }}</td>
+                <td>{{ c.curso.nombre }}</td>
+                <td class="nota">{{ c.nota }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+const busqueda = document.getElementById('busqueda');
+const ordenar = document.getElementById('ordenar');
+const filas = document.querySelectorAll('#tabla tbody tr');
+
+busqueda.addEventListener('keyup', () => {
+    const texto = busqueda.value.toLowerCase();
+
+    filas.forEach(fila => {
+        const nombre = fila.querySelector('.nombre').textContent.toLowerCase();
+        fila.style.display = nombre.includes(texto) ? '' : 'none';
+    });
+});
+
+ordenar.addEventListener('change', () => {
+    const tbody = document.querySelector('#tabla tbody');
+    const filasArray = Array.from(filas);
+
+    filasArray.sort((a, b) => {
+        const notaA = parseFloat(a.querySelector('.nota').textContent);
+        const notaB = parseFloat(b.querySelector('.nota').textContent);
+
+        return ordenar.value === 'asc' ? notaA - notaB : notaB - notaA;
+    });
+
+    filasArray.forEach(fila => tbody.appendChild(fila));
+});
+</script>
+
+{% endblock %}
