@@ -2,21 +2,18 @@
 
 {% block content %}
 <div class="card">
-    <h2>Iniciar Sesión</h2>
+    <h2>Registro</h2>
 
     <form method="POST">
         {% csrf_token %}
 
         <input type="text" name="username" placeholder="Usuario" required>
+        <input type="email" name="email" placeholder="Correo" required>
         <input type="password" name="password" placeholder="Contraseña" required>
 
-        <button type="submit">Ingresar</button>
+        <button type="submit">Registrarse</button>
     </form>
 
-    {% if form.errors %}
-        <p style="color:red;">Usuario o contraseña incorrectos</p>
-    {% endif %}
-
-    <p>No tienes cuenta? <a href="/registro/">Regístrate</a></p>
+    <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
 </div>
 {% endblock %}
