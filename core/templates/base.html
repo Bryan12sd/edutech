@@ -56,6 +56,15 @@
 
 <header>
     <h1>EduTech</h1>
+
+    {% if request.user.is_authenticated %}
+    <p>Bienvenido, {{ request.user.username }}</p>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Cerrar sesión</button>
+    </form>
+    {% endif %}
 </header>
 
 <div class="container">
