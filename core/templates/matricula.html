@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Matrícula{% endblock %}
+
+{% block content %}
+
+<!-- FORMULARIO -->
+<div class="card">
+    <h2 style="margin-bottom: 15px;"> Matrícula de Cursos</h2>
+
+    <form method="POST" class="form-matricula">
+        {% csrf_token %}
+
+        <label for="curso"><strong>Selecciona un curso:</strong></label>
+
+        <select name="curso" id="curso">
+            {% for c in cursos %}
+                <option value="{{ c.id }}">{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn">Matricularme</button>
+    </form>
+</div>
+
+<!-- LISTA DE CURSOS -->
+<div class="card">
+    <h3 style="margin-bottom: 15px;"> Mis cursos matriculados</h3>
+
+    <div class="lista-cursos">
+        {% for m in matriculas %}
+            <div class="curso-item">
+                <i class="fas fa-book"></i>
+                {{ m.curso.nombre }}
+            </div>
+        {% empty %}
+            <p style="text-align:center;">No estás matriculado en ningún curso</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* FORMULARIO */
+.form-matricula {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-matricula select {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+}
+
+/* LISTA DE CURSOS */
+.lista-cursos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.curso-item {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 10px 15px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* BOTÓN */
+.btn {
+    margin-top: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .curso-item {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+{% endblock %}

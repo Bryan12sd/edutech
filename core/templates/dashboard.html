@@ -1,12 +1,89 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="card">
-    <h2>Bienvenido  {{ request.user.estudiante.nombre }}</h2>
-    <p>Accede a tu información académica</p>
+{% block title %}Dashboard{% endblock %}
 
-    <a href="/calificaciones/">
-        <button class="btn">Ver mis calificaciones</button>
-    </a>
+{% block content %}
+
+<!-- BIENVENIDA -->
+<div class="card">
+    <h2> Bienvenido {{ request.user.estudiante.nombre }}</h2>
+    <p>Accede rápidamente a tu información académica</p>
 </div>
+
+<!-- ACCESOS RÁPIDOS -->
+<div class="grid-dashboard">
+
+    <a href="/calificaciones/" class="card link-card">
+        <i class="fas fa-chart-bar icono"></i>
+        <h3>Calificaciones</h3>
+        <p>Consulta tus notas</p>
+    </a>
+
+    <a href="/horario/" class="card link-card">
+        <i class="fas fa-calendar-alt icono"></i>
+        <h3>Horario</h3>
+        <p>Revisa tus clases</p>
+    </a>
+
+    <a href="/matricula/" class="card link-card">
+        <i class="fas fa-book-open icono"></i>
+        <h3>Matrícula</h3>
+        <p>Inscríbete en cursos</p>
+    </a>
+
+    <a href="/crear_curso/" class="card link-card">
+        <i class="fas fa-plus-circle icono"></i>
+        <h3>Crear Curso</h3>
+        <p>Agregar nuevos cursos</p>
+    </a>
+
+</div>
+
+<style>
+/* GRID */
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+/* TARJETAS CLICKEABLES */
+.link-card {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.link-card:hover {
+    transform: translateY(-5px);
+    background: #f8fafc;
+}
+
+/* ICONOS */
+.icono {
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: #4a47cc;
+}
+
+/* TEXTO */
+.link-card h3 {
+    margin: 10px 0 5px;
+}
+
+.link-card p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .icono {
+        font-size: 24px;
+    }
+}
+</style>
+
 {% endblock %}

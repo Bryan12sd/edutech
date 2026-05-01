@@ -1,13 +1,78 @@
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="card">
-    <h2>Crear Curso</h2>
+{% block title %}Crear Curso{% endblock %}
 
-    <form method="POST">
+{% block content %}
+
+<div class="card form-card">
+    <h2> Crear Curso</h2>
+    <p class="subtitle">Agrega un nuevo curso al sistema</p>
+
+    <form method="POST" class="form">
         {% csrf_token %}
-        <input type="text" name="nombre" placeholder="Nombre del curso">
-        <button class="btn">Guardar</button>
+
+        <label>Nombre del curso</label>
+        <input
+            type="text"
+            name="nombre"
+            placeholder="Ej: Matemáticas, Historia..."
+            required
+        >
+
+        <button type="submit" class="btn">
+             Guardar curso
+        </button>
     </form>
 </div>
+
+<style>
+.form-card {
+    max-width: 500px;
+    margin: auto;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.form input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.btn {
+    margin-top: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .form-card {
+        margin: 0;
+    }
+}
+</style>
+
 {% endblock %}

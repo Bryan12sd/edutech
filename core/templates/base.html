@@ -13,19 +13,73 @@
             background: #f1f5f9;
         }
 
-        /* TOP BAR */
+        /* TOP BAR - FIJA */
         .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             background: #0f172a;
             color: white;
-            padding: 15px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        /* IZQUIERDA */
+        .topbar-left {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
         .menu-btn {
             font-size: 20px;
             cursor: pointer;
-            margin-right: 15px;
+        }
+
+        .brand {
+            font-weight: bold;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* DERECHA */
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #cbd5e1;
+        }
+
+        /* BOTÓN LOGOUT */
+        .btn-logout {
+            background: #ef4444;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
         }
 
         /* DRAWER */
@@ -35,10 +89,15 @@
             left: -250px;
             width: 250px;
             height: 100%;
-            background:  #0f172a;
+            background: #0f172a;
             color: white;
             padding-top: 60px;
-            transition: 0.3s;
+            transition: left 0.3s ease;
+            z-index: 999;
+        }
+
+        .drawer.open {
+            left: 0;
         }
 
         .drawer a {
@@ -46,17 +105,18 @@
             padding: 15px;
             color: white;
             text-decoration: none;
+            transition: background 0.2s;
         }
 
         .drawer a:hover {
             background: #334155;
         }
+
         .drawer-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+           margin-left: 25px    
             padding: 10px;
-
         }
 
         .logo {
@@ -68,17 +128,18 @@
             font-size: 20px;
             cursor: pointer;
             color: #f1f5f9;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #cbd5e1;
         }
 
         /* CONTENIDO */
         .container {
-            padding: 20px;
-            transition: margin-left 0.3s;
-        }
-
-        /* CUANDO SE ABRE */
-        .drawer.open {
-            left: 0;
+            margin-top: 60px; /* Espacio para el top bar fijo */
+            padding: 25px 20px;
+            transition: margin-left 0.3s ease;
         }
 
         .container.shift {
@@ -102,8 +163,9 @@
             border: none;
             border-radius: 5px;
         }
-         .btnWhite {
-             width: 100%;
+
+        .btnWhite {
+            width: 100%;
             padding: 12px;
             background: #0f172a;
             border: none;
@@ -112,39 +174,76 @@
             font-size: 16px;
             cursor: pointer;
         }
-        .btn-logo{
-        background: transparent
 
+        .btn-logo {
+            background: transparent;
         }
 
+        /* OVERLAY para cerrar drawer al hacer click fuera */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            transition: opacity 0.3s ease;
+        }
 
+        .overlay.active {
+            display: block;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .container.shift {
                 margin-left: 0;
             }
-        }
 
+            .user-name {
+                display: none;
+            }
+        }
     </style>
 </head>
 
 <body>
 
+<!-- OVERLAY -->
+<div id="overlay" class="overlay" onclick="closeDrawer()"></div>
+
 <!-- TOP BAR -->
-<div class="topbar" style="display:flex; align-items:center;">
+<div class="topbar">
+    <!-- IZQUIERDA -->
+    <div class="topbar-left">
+        <span class="menu-btn" onclick="toggleDrawer()">
+            <i class="fas fa-bars"></i>
+        </span>
 
-    <span class="menu-btn" onclick="toggleDrawer()">☰</span>
+        <span class="brand">
+            <i class="fas fa-graduation-cap"></i> EduTech
+        </span>
+    </div>
 
-
-    <strong style="margin-left:10px;">EduTech</strong>
+    <!-- DERECHA -->
     {% if request.user.is_authenticated %}
-    <form action="{% url 'logout' %}" method="post" style="margin-left:auto;">
-        {% csrf_token %}
-        <button class="btnWhite" type="submit">Cerrar sesión</button>
-    </form>
-    {% endif %}
+    <div class="topbar-right">
+        <span class="user-name">
+            <i class="fas fa-user-circle"></i>
+            {{ request.user.estudiante.nombre }}
+        </span>
 
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn-logout" type="submit">
+                <i class="fas fa-sign-out-alt"></i>
+                Salir
+            </button>
+        </form>
+    </div>
+    {% endif %}
 </div>
 
 <!-- DRAWER -->
@@ -152,25 +251,22 @@
     {% load static %}
 
     <div class="drawer-header">
-        <a href="/dashboard/">
+        <a href="/dashboard/" onclick="closeDrawer()">
             <img src="{% static 'image/logo.png' %}" alt="Logo" class="logo">
         </a>
-
-        <span class="close-btn" onclick="toggleDrawer()">
-            <i class="fas fa-times"></i>
-        </span>
 
 
     </div>
 
     {% if user.is_authenticated %}
-    <a href="/dashboard/">Dashboard</a>
-    <a href="/calificaciones/">Mis Calificaciones</a>
-    <a href="/horario/">Horario</a>
-    <a href="/crear_curso/">Crear Curso</a>
+    <a href="/dashboard/" onclick="closeDrawer()">Dashboard</a>
+    <a href="/calificaciones/" onclick="closeDrawer()">Mis Calificaciones</a>
+    <a href="/horario/" onclick="closeDrawer()">Horario</a>
+    <a href="/matricula/" onclick="closeDrawer()">Matricula</a>
+    <a href="/crear_curso/" onclick="closeDrawer()">Crear Curso</a>
     {% else %}
-    <a href="/">Login</a>
-    <a href="/registro/">Registro</a>
+    <a href="/" onclick="closeDrawer()">Login</a>
+    <a href="/registro/" onclick="closeDrawer()">Registro</a>
     {% endif %}
 </div>
 
@@ -183,11 +279,12 @@
     function toggleDrawer() {
         const drawer = document.getElementById('drawer');
         const main = document.getElementById('main');
+        const overlay = document.getElementById('overlay');
 
         drawer.classList.toggle('open');
         main.classList.toggle('shift');
+        overlay.classList.toggle('active');
 
-        // Guardar estado
         if (drawer.classList.contains('open')) {
             localStorage.setItem('drawer', 'open');
         } else {
@@ -195,16 +292,28 @@
         }
     }
 
-    // Mantener estado al recargar o cambiar de página
+    function closeDrawer() {
+        const drawer = document.getElementById('drawer');
+        const main = document.getElementById('main');
+        const overlay = document.getElementById('overlay');
+
+        drawer.classList.remove('open');
+        main.classList.remove('shift');
+        overlay.classList.remove('active');
+
+        localStorage.setItem('drawer', 'closed');
+    }
+
     window.onload = function() {
         const drawer = document.getElementById('drawer');
         const main = document.getElementById('main');
-
+        const overlay = document.getElementById('overlay');
         const estado = localStorage.getItem('drawer');
 
         if (estado === 'open') {
             drawer.classList.add('open');
             main.classList.add('shift');
+            overlay.classList.add('active');
         }
     }
 </script>

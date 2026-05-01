@@ -1,43 +1,104 @@
 {% extends 'base.html' %}
 
+{% block title %}Mis Horarios{% endblock %}
+
 {% block content %}
 <div class="card">
-    <h2>Mis Horarios</h2>
+    <h2 style="margin-bottom: 15px;">
+         Mis Horarios</h2>
 
-    <select id="filtroDia">
-        <option value="">Todos</option>
-        <option value="Lunes">Lunes</option>
-        <option value="Martes">Martes</option>
-        <option value="Miercoles">Miercoles</option>
-    </select>
+    <!-- FILTRO -->
+    <div style="margin-bottom: 15px;">
+        <label for="filtroDia"><strong>Filtrar por día:</strong></label><br>
+        <select id="filtroDia" class="filtro">
+            <option value="">Todos</option>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miercoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+        </select>
+    </div>
 
-    <table id="tablaHorarios">
-        <thead>
-            <tr>
-                <th>Materia</th>
-                <th>Día</th>
-                <th>Hora</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for h in horarios %}
-            <tr>
-                <td>{{ h.curso.nombre }}</td>
-                <td class="dia">{{ h.dia }}</td>
-                <td>{{ h.hora }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- TABLA -->
+    <div style="overflow-x:auto;">
+        <table id="tablaHorarios" class="tabla">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Día</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in horarios %}
+                <tr>
+                    <td>{{ h.curso.nombre }}</td>
+                    <td class="dia">{{ h.dia }}</td>
+                    <td>{{ h.hora }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align:center;">No hay horarios registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<style>
+/* FILTRO */
+.filtro {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    margin-top: 5px;
+    width: 200px;
+}
+
+/* TABLA */
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.tabla th {
+    background: #0f172a;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tabla tr:hover {
+    background: #f1f5f9;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+    .tabla th, .tabla td {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .filtro {
+        width: 100%;
+    }
+}
+</style>
 
 <script>
 document.getElementById('filtroDia').addEventListener('change', function() {
     const valor = this.value.toLowerCase();
 
     document.querySelectorAll('#tablaHorarios tbody tr').forEach(fila => {
-        const dia = fila.querySelector('.dia').textContent.toLowerCase();
-
+        const dia = fila.querySelector('.dia')?.textContent.toLowerCase() || '';
         fila.style.display = (valor === '' || dia === valor) ? '' : 'none';
     });
 });

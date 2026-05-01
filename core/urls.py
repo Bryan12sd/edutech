@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from core.views import login_view, dashboard, calificaciones, registro, horarios,crear_curso
+from core.views import login_view, dashboard, calificaciones, registro, horarios, crear_curso, matricula
 from django.urls import reverse_lazy
 
 urlpatterns = [
@@ -11,5 +11,6 @@ urlpatterns = [
     path('registro/', registro, name='register'),
     path('horario/', horarios, name='horario'),
     path('crear_curso/', crear_curso, name='crear_curso'),
+    path('matricula/', matricula, name='matricula'),
 
 ]
