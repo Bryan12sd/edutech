@@ -35,7 +35,7 @@
             left: -250px;
             width: 250px;
             height: 100%;
-            background: #1e293b;
+            background:  #0f172a;
             color: white;
             padding-top: 60px;
             transition: 0.3s;
@@ -50,6 +50,24 @@
 
         .drawer a:hover {
             background: #334155;
+        }
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+
+        }
+
+        .logo {
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .close-btn {
+            font-size: 20px;
+            cursor: pointer;
+            color: #f1f5f9;
         }
 
         /* CONTENIDO */
@@ -85,20 +103,21 @@
             border-radius: 5px;
         }
          .btnWhite {
-            background: #ffff;
-            color: black;
-            padding: 10px;
+             width: 100%;
+            padding: 12px;
+            background: #0f172a;
             border: none;
-            border-radius: 5px;
-        }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 22px;
-            cursor: pointer;
+            border-radius: 8px;
             color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
+        .btn-logo{
+        background: transparent
+
+        }
+
+
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
@@ -106,6 +125,7 @@
                 margin-left: 0;
             }
         }
+
     </style>
 </head>
 
@@ -128,15 +148,26 @@
 </div>
 
 <!-- DRAWER -->
-<div id="drawer" class="drawer">.
+<div id="drawer" class="drawer">
+    {% load static %}
 
-    <span class="close-btn" onclick="toggleDrawer()">
-    <i class="fas fa-times"></i>
-</span>
+    <div class="drawer-header">
+        <a href="/dashboard/">
+            <img src="{% static 'image/logo.png' %}" alt="Logo" class="logo">
+        </a>
+
+        <span class="close-btn" onclick="toggleDrawer()">
+            <i class="fas fa-times"></i>
+        </span>
+
+
+    </div>
+
     {% if user.is_authenticated %}
     <a href="/dashboard/">Dashboard</a>
     <a href="/calificaciones/">Mis Calificaciones</a>
-
+    <a href="/horario/">Horario</a>
+    <a href="/crear_curso/">Crear Curso</a>
     {% else %}
     <a href="/">Login</a>
     <a href="/registro/">Registro</a>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h2>Mis Horarios</h2>
+
+    <select id="filtroDia">
+        <option value="">Todos</option>
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miercoles">Miercoles</option>
+    </select>
+
+    <table id="tablaHorarios">
+        <thead>
+            <tr>
+                <th>Materia</th>
+                <th>Día</th>
+                <th>Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in horarios %}
+            <tr>
+                <td>{{ h.curso.nombre }}</td>
+                <td class="dia">{{ h.dia }}</td>
+                <td>{{ h.hora }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+document.getElementById('filtroDia').addEventListener('change', function() {
+    const valor = this.value.toLowerCase();
+
+    document.querySelectorAll('#tablaHorarios tbody tr').forEach(fila => {
+        const dia = fila.querySelector('.dia').textContent.toLowerCase();
+
+        fila.style.display = (valor === '' || dia === valor) ? '' : 'none';
+    });
+});
+</script>
+
+{% endblock %}
