@@ -1,24 +1,35 @@
-from ..forms import  RegistroForm
-from django.shortcuts import redirect
-from ..models import Estudiante
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.contrib.auth import login
+from core.forms import RegistroForm
+from core.models import Estudiante, Profesor
+
 def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
+
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
+            rol = form.cleaned_data['rol']
 
-            # Crear estudiante automáticamente
-            Estudiante.objects.create(
-                user=user,
-                nombre=user.username,
-                email=user.email
+            user = User.objects.create_user(
+                username=form.cleaned_data['email'],  # login con email
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
             )
-            login(request, user)
 
+            if rol == 'estudiante':
+                Estudiante.objects.create(
+                    user=user,
+                    nombre=form.cleaned_data['username']
+                )
+
+            elif rol == 'profesor':
+                Profesor.objects.create(
+                    user=user,
+                    nombre=form.cleaned_data['username']
+                )
+
+            login(request, user)
             return redirect('dashboard')
 
     else:
