@@ -1,139 +1,791 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Registro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Registro - EduTech</title>
 
     <style>
-        html, body {
-            height: 100%;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 15px;
-            width: 340px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
-            box-sizing: border-box;
+        /* EFECTOS DE FONDO ANIMADOS */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 6s ease-in-out infinite;
         }
 
-        h2 {
-            margin-bottom: 20px;
-            color: #1e293b;
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -200px;
+            animation: float 8s ease-in-out infinite reverse;
         }
 
-        input {
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 950px;
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            outline: none;
-            transition: 0.3s;
-            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.6s ease;
         }
 
-        input:focus {
-            border-color: #4a47cc;
-            box-shadow: 0 0 6px rgba(102,126,234,0.5);
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #0f172a;
-            border: none;
-            border-radius: 8px;
+        /* PANEL IZQUIERDO - BRANDING */
+        .brand-panel {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 60px 40px;
             color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
         }
 
-        button:hover {
-            background: #4a47cc;
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
         }
 
-        .error {
-            margin-top: 10px;
-            background: #ffe5e5;
-            color: #b00020;
-            padding: 10px;
+        .logo-container {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container img {
+            height: 100px;
+            filter: brightness(0) invert(1);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .brand-panel h1 {
+            font-size: 30px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-panel p {
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+        .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .benefit-icon {
+            width: 35px;
+            height: 35px;
+            background: rgba(255,255,255,0.1);
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #667eea;
+            flex-shrink: 0;
+        }
+
+        .benefit-item span {
             font-size: 14px;
         }
 
-        p {
-            margin-top: 15px;
+        /* PANEL DERECHO - FORMULARIO */
+        .form-panel {
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .form-panel::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .form-panel::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 26px;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #64748b;
             font-size: 14px;
         }
 
-        a {
-            color: #4a47cc;
+        /* FORMULARIO */
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+            z-index: 1;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 13px 15px 13px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-select {
+            cursor: pointer;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #cbd5e1;
+        }
+
+        /* VALIDACIÓN DE PASSWORD */
+        .password-strength {
+            margin-top: 8px;
+            display: none;
+        }
+
+        .password-strength.active {
+            display: block;
+        }
+
+        .strength-bars {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+
+        .strength-bar.active {
+            background: #ef4444;
+        }
+
+        .strength-bar.active.medium {
+            background: #f59e0b;
+        }
+
+        .strength-bar.active.strong {
+            background: #10b981;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* TÉRMINOS Y CONDICIONES */
+        .terms-group {
+            margin-bottom: 20px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 2px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label a {
+            color: #667eea;
             text-decoration: none;
-            font-weight: bold;
         }
 
-        a:hover {
+        .checkbox-label a:hover {
             text-decoration: underline;
         }
-        select {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        outline: none;
-        background: white;
-        transition: 0.3s;
-        box-sizing: border-box;
-        font-family: inherit;
-        font-size: 14px;
+
+        /* BOTÓN */
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        select:focus {
-            border-color: #4a47cc;
-            box-shadow: 0 0 6px rgba(102,126,234,0.5);
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* MENSAJE DE ERROR */
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            border-left: 4px solid #ef4444;
+            animation: shake 0.5s ease;
+        }
+
+        .error-message ul {
+            margin: 5px 0 0 20px;
+            padding: 0;
+        }
+
+        .error-message li {
+            margin-bottom: 3px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* DIVIDER */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            padding: 0 15px;
+        }
+
+        /* LOGIN LINK */
+        .login-section {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .login-section p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .login-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        .login-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        /* LOADING STATE */
+        .btn-register.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-register .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .btn-register.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* PASSWORD TOGGLE */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            z-index: 1;
+        }
+
+        .password-toggle:hover {
+            color: #667eea;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .register-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 35px 25px;
+            }
+
+            .form-header h2 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .form-panel {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="card">
-    {% load static %}
-    <img src="{% static 'image/logo.png' %}" alt="Logo" height="100">
-    <h2>Registro</h2>
+<div class="register-container">
+    <!-- PANEL IZQUIERDO - BRANDING -->
+    <div class="brand-panel">
+        {% load static %}
+        <div class="logo-container">
+            <img src="{% static 'image/logo.png' %}" alt="EduTech Logo">
+        </div>
 
-    <form method="POST">
-        {% csrf_token %}
+        <h1>Únete a EduTech</h1>
+        <p>Comienza tu viaje educativo con nosotros</p>
 
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="email" name="email" placeholder="Correo electrónico" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <input type="password" name="password2" placeholder="Confirmar contraseña" required>
-        {{ form.rol }}
-        <button type="submit">Registrarse</button>
-    </form>
+        <div class="benefits">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <span>Acceso a todos los cursos</span>
+            </div>
 
-    {% if form.errors %}
-    <div class="error">
-        {{ form.errors }}
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <span>Seguimiento de tu progreso</span>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <span>Horarios personalizados</span>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <span>Calificaciones en tiempo real</span>
+            </div>
+
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <span>Soporte 24/7</span>
+            </div>
+        </div>
     </div>
-    {% endif %}
 
-    <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+    <!-- PANEL DERECHO - FORMULARIO -->
+    <div class="form-panel">
+        <div class="form-header">
+            <h2>Crear cuenta</h2>
+            <p>Completa el formulario para registrarte</p>
+        </div>
+
+        <!-- MENSAJE DE ERROR -->
+        {% if form.errors %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <strong>Por favor corrige los siguientes errores:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- FORMULARIO -->
+        <form method="POST" id="registerForm">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user input-icon"></i>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-input"
+                        placeholder="Elige un nombre de usuario"
+                        required
+                        autofocus
+                    >
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Correo Electrónico</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-input"
+                        placeholder="tu@email.com"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-input"
+                        placeholder="Mínimo 8 caracteres"
+                        required
+                    >
+                    <i class="fas fa-eye password-toggle" id="togglePassword1"></i>
+                </div>
+                <div class="password-strength" id="passwordStrength">
+                    <div class="strength-bars">
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                    </div>
+                    <span class="strength-text">Seguridad de contraseña: <strong id="strengthText">-</strong></span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="password2">Confirmar Contraseña</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="password2"
+                        name="password2"
+                        class="form-input"
+                        placeholder="Confirma tu contraseña"
+                        required
+                    >
+                    <i class="fas fa-eye password-toggle" id="togglePassword2"></i>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="rol">Tipo de Usuario</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-user-tag input-icon"></i>
+                    {{ form.rol }}
+                </div>
+            </div>
+
+            <div class="terms-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" required>
+                    <span>Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-register" id="btnRegister">
+                <span class="spinner"></span>
+                <span>Crear Cuenta</span>
+                <i class="fas fa-user-plus"></i>
+            </button>
+        </form>
+
+        <!-- LOGIN LINK -->
+        <div class="login-section">
+            <p>¿Ya tienes una cuenta?</p>
+            <a href="/" class="login-link">
+                <i class="fas fa-sign-in-alt"></i> Inicia Sesión
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+// ANIMACIÓN DE LOADING AL ENVIAR
+const form = document.getElementById('registerForm');
+const btnRegister = document.getElementById('btnRegister');
+
+form.addEventListener('submit', function(e) {
+    btnRegister.classList.add('loading');
+});
+
+// MOSTRAR/OCULTAR CONTRASEÑA
+function setupPasswordToggle(toggleId, inputId) {
+    const toggle = document.getElementById(toggleId);
+    const input = document.getElementById(inputId);
+
+    toggle.addEventListener('click', function() {
+        const type = input.type === 'password' ? 'text' : 'password';
+        input.type = type;
+        this.className = type === 'password' ? 'fas fa-eye password-toggle' : 'fas fa-eye-slash password-toggle';
+    });
+}
+
+setupPasswordToggle('togglePassword1', 'password');
+setupPasswordToggle('togglePassword2', 'password2');
+
+// VALIDACIÓN DE FORTALEZA DE CONTRASEÑA
+const passwordInput = document.getElementById('password');
+const strengthIndicator = document.getElementById('passwordStrength');
+const strengthText = document.getElementById('strengthText');
+const strengthBars = document.querySelectorAll('.strength-bar');
+
+passwordInput.addEventListener('input', function() {
+    const password = this.value;
+
+    if (password.length === 0) {
+        strengthIndicator.classList.remove('active');
+        return;
+    }
+
+    strengthIndicator.classList.add('active');
+
+    let strength = 0;
+
+    // Longitud
+    if (password.length >= 8) strength++;
+    if (password.length >= 12) strength++;
+
+    // Complejidad
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+    // Actualizar barras
+    strengthBars.forEach((bar, index) => {
+        bar.classList.remove('active', 'medium', 'strong');
+        if (index < strength) {
+            bar.classList.add('active');
+            if (strength >= 3) bar.classList.add('medium');
+            if (strength >= 4) bar.classList.add('strong');
+        }
+    });
+
+    // Actualizar texto
+    if (strength <= 2) {
+        strengthText.textContent = 'Débil';
+        strengthText.style.color = '#ef4444';
+    } else if (strength <= 3) {
+        strengthText.textContent = 'Media';
+        strengthText.style.color = '#f59e0b';
+    } else {
+        strengthText.textContent = 'Fuerte';
+        strengthText.style.color = '#10b981';
+    }
+});
+
+// VALIDAR QUE LAS CONTRASEÑAS COINCIDAN
+const password2Input = document.getElementById('password2');
+
+password2Input.addEventListener('input', function() {
+    if (this.value !== passwordInput.value && this.value.length > 0) {
+        this.style.borderColor = '#ef4444';
+    } else {
+        this.style.borderColor = '#e2e8f0';
+    }
+});
+
+// AGREGAR CLASE AL SELECT PARA QUE FUNCIONE CON EL ICONO
+const selectElement = document.querySelector('select[name="rol"]');
+if (selectElement) {
+    selectElement.classList.add('form-select');
+    selectElement.id = 'rol';
+}
+</script>
 
 </body>
 </html>

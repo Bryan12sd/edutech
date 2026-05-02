@@ -4,75 +4,928 @@
 
 {% block content %}
 
-<div class="card form-card">
-    <h2> Crear Curso</h2>
-    <p class="subtitle">Agrega un nuevo curso al sistema</p>
+<!-- HEADER -->
+<div class="create-header">
+    <div class="header-content">
+        <h1><i class="fas fa-plus-circle"></i> Crear Nuevo Curso</h1>
+        <p>Completa la información para agregar un curso al sistema</p>
+    </div>
+</div>
 
-    <form method="POST" class="form">
-        {% csrf_token %}
+<!-- FORMULARIO -->
+<div class="form-container">
+    <div class="card form-card">
+        <div class="form-header">
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <span>Información Básica</span>
+                </div>
+                <div class="step-line"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <span>Detalles</span>
+                </div>
+            </div>
+        </div>
 
-        <label>Nombre del curso</label>
-        <input
-            type="text"
-            name="nombre"
-            placeholder="Ej: Matemáticas, Historia..."
-            required
-        >
+        <!-- MENSAJES DE ÉXITO/ERROR -->
+        {% if messages %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
 
-        <button type="submit" class="btn">
-             Guardar curso
-        </button>
-    </form>
+        <form method="POST" action="/crear_curso/" class="course-form" id="courseForm">
+            {% csrf_token %}
+
+            <!-- SECCIÓN 1: INFORMACIÓN BÁSICA -->
+            <div class="form-section active" id="section1">
+                <h3 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Información Básica
+                </h3>
+
+                <div class="form-row">
+                    <div class="input-group full-width">
+                        <label for="nombre">
+                            Nombre del Curso <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-book input-icon"></i>
+                            <input
+                                type="text"
+                                id="nombre"
+                                name="nombre"
+                                class="form-input"
+                                placeholder="Ej: Matemáticas Avanzadas"
+                                required
+                                maxlength="100"
+                            >
+                        </div>
+                        <span class="input-hint">Máximo 100 caracteres</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="codigo">
+                            Código del Curso <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hashtag input-icon"></i>
+                            <input
+                                type="text"
+                                id="codigo"
+                                name="codigo"
+                                class="form-input"
+                                placeholder="Ej: MAT101"
+                                required
+                                maxlength="10"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="creditos">
+                            Créditos
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-star input-icon"></i>
+                            <input
+                                type="number"
+                                id="creditos"
+                                name="creditos"
+                                class="form-input"
+                                placeholder="Ej: 4"
+                                min="1"
+                                max="10"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="categoria">
+                            Categoría
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-folder input-icon"></i>
+                            <select id="categoria" name="categoria" class="form-select">
+                                <option value="">Seleccionar categoría</option>
+                                <option value="matematicas">Matemáticas</option>
+                                <option value="ciencias">Ciencias</option>
+                                <option value="humanidades">Humanidades</option>
+                                <option value="tecnologia">Tecnología</option>
+                                <option value="idiomas">Idiomas</option>
+                                <option value="artes">Artes</option>
+                                <option value="deportes">Deportes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="nivel">
+                            Nivel
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-layer-group input-icon"></i>
+                            <select id="nivel" name="nivel" class="form-select">
+                                <option value="">Seleccionar nivel</option>
+                                <option value="basico">Básico</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-next" onclick="nextSection()">
+                        Siguiente <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: DETALLES -->
+            <div class="form-section" id="section2">
+                <h3 class="section-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    Detalles del Curso
+                </h3>
+
+                <div class="form-row">
+                    <div class="input-group full-width">
+                        <label for="descripcion">
+                            Descripción
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-align-left input-icon"></i>
+                            <textarea
+                                id="descripcion"
+                                name="descripcion"
+                                class="form-textarea"
+                                placeholder="Describe brevemente el contenido y objetivos del curso..."
+                                rows="4"
+                                maxlength="500"
+                            ></textarea>
+                        </div>
+                        <span class="input-hint">Máximo 500 caracteres</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="profesor">
+                            Profesor Asignado
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-chalkboard-teacher input-icon"></i>
+                            <input
+                                type="text"
+                                id="profesor"
+                                name="profesor"
+                                class="form-input"
+                                placeholder="Nombre del profesor"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="duracion">
+                            Duración
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-clock input-icon"></i>
+                            <select id="duracion" name="duracion" class="form-select">
+                                <option value="">Seleccionar duración</option>
+                                <option value="bimestral">Bimestral (2 meses)</option>
+                                <option value="trimestral">Trimestral (3 meses)</option>
+                                <option value="semestral">Semestral (6 meses)</option>
+                                <option value="anual">Anual (12 meses)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cupo">
+                            Cupo Máximo
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-users input-icon"></i>
+                            <input
+                                type="number"
+                                id="cupo"
+                                name="cupo"
+                                class="form-input"
+                                placeholder="Ej: 30"
+                                min="1"
+                                max="100"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="color">
+                            Color Identificador
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-palette input-icon"></i>
+                            <input
+                                type="color"
+                                id="color"
+                                name="color"
+                                class="form-color"
+                                value="#3b82f6"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group full-width">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="activo" checked>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-label">Curso activo y disponible para matrícula</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-back" onclick="prevSection()">
+                        <i class="fas fa-arrow-left"></i> Atrás
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Crear Curso
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- PANEL DE VISTA PREVIA -->
+    <div class="card preview-card">
+        <h3 class="preview-title">
+            <i class="fas fa-eye"></i> Vista Previa
+        </h3>
+
+        <div class="course-preview">
+            <div class="preview-header" id="previewHeader" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                <div class="preview-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h4 id="previewNombre">Nombre del Curso</h4>
+                <span class="preview-codigo" id="previewCodigo">CÓDIGO</span>
+            </div>
+
+            <div class="preview-body">
+                <div class="preview-item">
+                    <i class="fas fa-folder"></i>
+                    <span>Categoría: <strong id="previewCategoria">-</strong></span>
+                </div>
+
+                <div class="preview-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Nivel: <strong id="previewNivel">-</strong></span>
+                </div>
+
+                <div class="preview-item">
+                    <i class="fas fa-star"></i>
+                    <span>Créditos: <strong id="previewCreditos">-</strong></span>
+                </div>
+
+                <div class="preview-item">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Profesor: <strong id="previewProfesor">-</strong></span>
+                </div>
+
+                <div class="preview-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Duración: <strong id="previewDuracion">-</strong></span>
+                </div>
+
+                <div class="preview-item">
+                    <i class="fas fa-users"></i>
+                    <span>Cupo: <strong id="previewCupo">-</strong></span>
+                </div>
+
+                <div class="preview-description">
+                    <p id="previewDescripcion">La descripción del curso aparecerá aquí...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
-.form-card {
-    max-width: 500px;
-    margin: auto;
+/* HEADER */
+.create-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    border-radius: 12px;
+    color: white;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.subtitle {
-    color: #64748b;
-    margin-bottom: 15px;
+.header-content h1 {
+    margin: 0 0 5px 0;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-content p {
+    margin: 0;
+    opacity: 0.9;
     font-size: 14px;
 }
 
-.form {
+/* CONTENEDOR PRINCIPAL */
+.form-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+/* CARD DEL FORMULARIO */
+.form-card {
+    padding: 30px;
+}
+
+/* INDICADOR DE PASOS */
+.form-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
+.step span {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.step.active span {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.step-line {
+    width: 80px;
+    height: 2px;
+    background: #e2e8f0;
+    margin: 0 10px;
+}
+
+/* ALERTAS */
+.alert {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #d1fae5;
+    color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+/* SECCIONES DEL FORMULARIO */
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-title {
+    margin: 0 0 25px 0;
+    font-size: 18px;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
     gap: 10px;
 }
 
-.form label {
-    font-weight: bold;
+/* FILAS Y GRUPOS DE INPUTS */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.input-group label {
     font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.required {
+    color: #ef4444;
+}
+
+/* INPUT WRAPPER */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 16px;
+    z-index: 1;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 13px 15px 13px 45px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-select {
+    cursor: pointer;
+    background: white;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.form-color {
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-color:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.input-hint {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* CHECKBOX */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-container:hover {
+    background: #f1f5f9;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: #475569;
+}
+
+/* BOTONES */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-next,
+.btn-submit {
+    flex: 1;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-next:hover,
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-back {
+    padding: 14px 24px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    color: #475569;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-back:hover {
+    background: #e2e8f0;
+}
+
+/* VISTA PREVIA */
+.preview-card {
+    position: sticky;
+    top: 85px;
+    padding: 25px;
+}
+
+.preview-title {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.course-preview {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+}
+
+.preview-header {
+    padding: 25px 20px;
+    color: white;
+    text-align: center;
+}
+
+.preview-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 15px;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.preview-header h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+}
+
+.preview-codigo {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.preview-body {
+    padding: 20px;
+    background: white;
+}
+
+.preview-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.preview-item i {
+    color: #94a3b8;
+    width: 16px;
+}
+
+.preview-item strong {
     color: #0f172a;
 }
 
-.form input {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s;
+.preview-description {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #667eea;
 }
 
-.form input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-}
-
-.btn {
-    margin-top: 10px;
+.preview-description p {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
 }
 
 /* RESPONSIVE */
-@media (max-width: 600px) {
-    .form-card {
+@media (max-width: 1024px) {
+    .form-container {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-card {
+        position: static;
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .step-indicator {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .step-line {
+        width: 2px;
+        height: 30px;
         margin: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-card {
+        padding: 20px;
+    }
+
+    .header-content h1 {
+        font-size: 20px;
     }
 }
 </style>
+
+<script>
+let currentSection = 1;
+
+function nextSection() {
+    // Validar sección actual
+    const section1 = document.getElementById('section1');
+    const inputs = section1.querySelectorAll('input[required]');
+    let valid = true;
+
+    inputs.forEach(input => {
+        if (!input.value) {
+            input.focus();
+            valid = false;
+        }
+    });
+
+    if (!valid) {
+        alert('Por favor completa todos los campos requeridos');
+        return;
+    }
+
+    // Cambiar sección
+    document.getElementById('section1').classList.remove('active');
+    document.getElementById('section2').classList.add('active');
+
+    // Actualizar indicador
+    document.querySelectorAll('.step')[0].classList.remove('active');
+    document.querySelectorAll('.step')[1].classList.add('active');
+
+    currentSection = 2;
+}
+
+function prevSection() {
+    document.getElementById('section2').classList.remove('active');
+    document.getElementById('section1').classList.add('active');
+
+    document.querySelectorAll('.step')[1].classList.remove('active');
+    document.querySelectorAll('.step')[0].classList.add('active');
+
+    currentSection = 1;
+}
+
+// VISTA PREVIA EN TIEMPO REAL
+const formInputs = {
+    nombre: document.getElementById('nombre'),
+    codigo: document.getElementById('codigo'),
+    categoria: document.getElementById('categoria'),
+    nivel: document.getElementById('nivel'),
+    creditos: document.getElementById('creditos'),
+    profesor: document.getElementById('profesor'),
+    duracion: document.getElementById('duracion'),
+    cupo: document.getElementById('cupo'),
+    color: document.getElementById('color'),
+    descripcion: document.getElementById('descripcion')
+};
+
+const previewElements = {
+    nombre: document.getElementById('previewNombre'),
+    codigo: document.getElementById('previewCodigo'),
+    categoria: document.getElementById('previewCategoria'),
+    nivel: document.getElementById('previewNivel'),
+    creditos: document.getElementById('previewCreditos'),
+    profesor: document.getElementById('previewProfesor'),
+    duracion: document.getElementById('previewDuracion'),
+    cupo: document.getElementById('previewCupo'),
+    descripcion: document.getElementById('previewDescripcion'),
+    header: document.getElementById('previewHeader')
+};
+
+// Actualizar nombre
+formInputs.nombre?.addEventListener('input', function() {
+    previewElements.nombre.textContent = this.value || 'Nombre del Curso';
+});
+
+// Actualizar código
+formInputs.codigo?.addEventListener('input', function() {
+    previewElements.codigo.textContent = this.value || 'CÓDIGO';
+});
+
+// Actualizar categoría
+formInputs.categoria?.addEventListener('change', function() {
+    const text = this.options[this.selectedIndex].text;
+    previewElements.categoria.textContent = this.value ? text : '-';
+});
+
+// Actualizar nivel
+formInputs.nivel?.addEventListener('change', function() {
+    const text = this.options[this.selectedIndex].text;
+    previewElements.nivel.textContent = this.value ? text : '-';
+});
+
+// Actualizar créditos
+formInputs.creditos?.addEventListener('input', function() {
+    previewElements.creditos.textContent = this.value || '-';
+});
+
+// Actualizar profesor
+formInputs.profesor?.addEventListener('input', function() {
+    previewElements.profesor.textContent = this.value || '-';
+});
+
+// Actualizar duración
+formInputs.duracion?.addEventListener('change', function() {
+    const text = this.options[this.selectedIndex].text;
+    previewElements.duracion.textContent = this.value ? text : '-';
+});
+
+// Actualizar cupo
+formInputs.cupo?.addEventListener('input', function() {
+    previewElements.cupo.textContent = this.value ? this.value + ' estudiantes' : '-';
+});
+
+// Actualizar color
+formInputs.color?.addEventListener('input', function() {
+    const color1 = this.value;
+    const color2 = adjustColorBrightness(this.value, -20);
+    previewElements.header.style.background = `linear-gradient(135deg, ${color1}, ${color2})`;
+});
+
+// Actualizar descripción
+formInputs.descripcion?.addEventListener('input', function() {
+    previewElements.descripcion.textContent = this.value || 'La descripción del curso aparecerá aquí...';
+});
+
+// Función auxiliar para ajustar brillo del color
+function adjustColorBrightness(hex, percent) {
+    const num = parseInt(hex.replace("#",""), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const G = (num >> 8 & 0x00FF) + amt;
+    const B = (num & 0x0000FF) + amt;
+    return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+        (G<255?G<1?0:G:255)*0x100 +
+        (B<255?B<1?0:B:255))
+        .toString(16).slice(1);
+}
+
+// ANIMACIÓN DE LOADING AL ENVIAR
+const courseForm = document.getElementById('courseForm');
+courseForm?.addEventListener('submit', function(e) {
+    const submitBtn = this.querySelector('.btn-submit');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+    submitBtn.style.pointerEvents = 'none';
+});
+</script>
 
 {% endblock %}
