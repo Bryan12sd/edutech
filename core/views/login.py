@@ -18,7 +18,9 @@ def login_api(request):
         return Response({
             "message": "Login exitoso",
             "user_id": user.id,
-            "username": user.username
+            "username":user.estudiante.nombre,
+            "email": user.username,
+            "status": True
         })
 
     return Response({"error": "Credenciales incorrectas"})
