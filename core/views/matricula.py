@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
 from core.models import Estudiante, Matricula, Curso
-
+from ..serializers import MatriculaSerializer
+from rest_framework import viewsets
 
 @login_required
 def matricula(request):
@@ -25,3 +25,6 @@ def matricula(request):
         'cursos': cursos,
         'matriculas': matriculas
     })
+class MatriculaViewSet(viewsets.ModelViewSet):
+    queryset = Matricula.objects.all()
+    serializer_class = MatriculaSerializer
