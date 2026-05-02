@@ -1,105 +1,660 @@
 {% extends 'base.html' %}
 
-{% block title %}Mis Horarios{% endblock %}
+{% block title %}Mi Horario{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2 style="margin-bottom: 15px;">
-         Mis Horarios</h2>
 
-    <!-- FILTRO -->
-    <div style="margin-bottom: 15px;">
-        <label for="filtroDia"><strong>Filtrar por día:</strong></label><br>
-        <select id="filtroDia" class="filtro">
-            <option value="">Todos</option>
-            <option value="Lunes">Lunes</option>
-            <option value="Martes">Martes</option>
-            <option value="Miercoles">Miércoles</option>
-            <option value="Jueves">Jueves</option>
-            <option value="Viernes">Viernes</option>
-        </select>
+<!-- HEADER -->
+<div class="schedule-header">
+    <div class="header-content">
+        <h1><i class="fas fa-calendar-week"></i> Mi Horario Semanal</h1>
+        <p>Visualiza todas tus clases de la semana</p>
+    </div>
+    <div class="header-actions">
+        <button class="view-btn active" onclick="cambiarVista('semana')">
+            <i class="fas fa-th"></i> Semana
+        </button>
+        <button class="view-btn" onclick="cambiarVista('lista')">
+            <i class="fas fa-list"></i> Lista
+        </button>
+    </div>
+</div>
+
+<!-- VISTA SEMANAL (CALENDARIO) -->
+<div id="vistaSemana" class="vista-activa">
+    <div class="card calendar-card">
+        <div class="week-grid">
+            <!-- COLUMNA DE HORAS -->
+            <div class="time-column">
+                <div class="time-header">Hora</div>
+                <div class="time-slot">07:00</div>
+                <div class="time-slot">08:00</div>
+                <div class="time-slot">09:00</div>
+                <div class="time-slot">10:00</div>
+                <div class="time-slot">11:00</div>
+                <div class="time-slot">12:00</div>
+                <div class="time-slot">13:00</div>
+                <div class="time-slot">14:00</div>
+                <div class="time-slot">15:00</div>
+                <div class="time-slot">16:00</div>
+                <div class="time-slot">17:00</div>
+                <div class="time-slot">18:00</div>
+            </div>
+
+            <!-- LUNES -->
+            <div class="day-column">
+                <div class="day-header">
+                    <span class="day-name">Lunes</span>
+                    <span class="day-date">{{ fecha_lunes|date:"d/m" }}</span>
+                </div>
+                <div class="day-slots" id="lunes-slots">
+                    {% for h in horarios %}
+                        {% if h.dia == "Lunes" %}
+                        <div class="class-block" style="background: {{ h.curso.color|default:'#3b82f6' }}; grid-row-start: {{ h.hora_inicio }};">
+                            <div class="class-name">{{ h.curso.nombre }}</div>
+                            <div class="class-time">{{ h.hora }}</div>
+                            <div class="class-room">{{ h.aula|default:'Sin aula' }}</div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- MARTES -->
+            <div class="day-column">
+                <div class="day-header">
+                    <span class="day-name">Martes</span>
+                    <span class="day-date">{{ fecha_martes|date:"d/m" }}</span>
+                </div>
+                <div class="day-slots" id="martes-slots">
+                    {% for h in horarios %}
+                        {% if h.dia == "Martes" %}
+                        <div class="class-block" style="background: {{ h.curso.color|default:'#10b981' }};">
+                            <div class="class-name">{{ h.curso.nombre }}</div>
+                            <div class="class-time">{{ h.hora }}</div>
+                            <div class="class-room">{{ h.aula|default:'Sin aula' }}</div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- MIÉRCOLES -->
+            <div class="day-column">
+                <div class="day-header">
+                    <span class="day-name">Miércoles</span>
+                    <span class="day-date">{{ fecha_miercoles|date:"d/m" }}</span>
+                </div>
+                <div class="day-slots" id="miercoles-slots">
+                    {% for h in horarios %}
+                        {% if h.dia == "Miercoles" %}
+                        <div class="class-block" style="background: {{ h.curso.color|default:'#8b5cf6' }};">
+                            <div class="class-name">{{ h.curso.nombre }}</div>
+                            <div class="class-time">{{ h.hora }}</div>
+                            <div class="class-room">{{ h.aula|default:'Sin aula' }}</div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- JUEVES -->
+            <div class="day-column">
+                <div class="day-header">
+                    <span class="day-name">Jueves</span>
+                    <span class="day-date">{{ fecha_jueves|date:"d/m" }}</span>
+                </div>
+                <div class="day-slots" id="jueves-slots">
+                    {% for h in horarios %}
+                        {% if h.dia == "Jueves" %}
+                        <div class="class-block" style="background: {{ h.curso.color|default:'#f59e0b' }};">
+                            <div class="class-name">{{ h.curso.nombre }}</div>
+                            <div class="class-time">{{ h.hora }}</div>
+                            <div class="class-room">{{ h.aula|default:'Sin aula' }}</div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- VIERNES -->
+            <div class="day-column">
+                <div class="day-header">
+                    <span class="day-name">Viernes</span>
+                    <span class="day-date">{{ fecha_viernes|date:"d/m" }}</span>
+                </div>
+                <div class="day-slots" id="viernes-slots">
+                    {% for h in horarios %}
+                        {% if h.dia == "Viernes" %}
+                        <div class="class-block" style="background: {{ h.curso.color|default:'#ef4444' }};">
+                            <div class="class-name">{{ h.curso.nombre }}</div>
+                            <div class="class-time">{{ h.hora }}</div>
+                            <div class="class-room">{{ h.aula|default:'Sin aula' }}</div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VISTA LISTA -->
+<div id="vistaLista" style="display: none;">
+    <div class="card">
+        <div class="filter-bar">
+            <label for="filtroDia">
+                <i class="fas fa-filter"></i> Filtrar por día:
+            </label>
+            <select id="filtroDia" class="filtro">
+                <option value="">Todos los días</option>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miercoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+            </select>
+        </div>
+
+        <div class="schedule-list">
+            {% for h in horarios %}
+            <div class="schedule-item" data-dia="{{ h.dia }}">
+                <div class="schedule-color" style="background: {{ h.curso.color|default:'#3b82f6' }}"></div>
+                <div class="schedule-info">
+                    <h4>{{ h.curso.nombre }}</h4>
+                    <div class="schedule-details">
+                        <span><i class="fas fa-calendar-day"></i> {{ h.dia }}</span>
+                        <span><i class="fas fa-clock"></i> {{ h.hora }}</span>
+                        <span><i class="fas fa-door-open"></i> {{ h.aula|default:'Sin aula' }}</span>
+                    </div>
+                </div>
+                <div class="schedule-badge">
+                    <span class="badge">{{ h.dia|slice:":3" }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-schedule">
+                <i class="fas fa-calendar-times"></i>
+                <h3>No hay horarios registrados</h3>
+                <p>Aún no tienes clases programadas en tu horario</p>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 
-    <!-- TABLA -->
-    <div style="overflow-x:auto;">
-        <table id="tablaHorarios" class="tabla">
-            <thead>
-                <tr>
-                    <th>Materia</th>
-                    <th>Día</th>
-                    <th>Hora</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for h in horarios %}
-                <tr>
-                    <td>{{ h.curso.nombre }}</td>
-                    <td class="dia">{{ h.dia }}</td>
-                    <td>{{ h.hora }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="3" style="text-align:center;">No hay horarios registrados</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- RESUMEN -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <div class="stat-icon blue">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-number">{{ horarios|length }}</span>
+                <span class="stat-label">Clases Totales</span>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon green">
+                <i class="fas fa-calendar-week"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-number">{{ dias_con_clases }}</span>
+                <span class="stat-label">Días con Clases</span>
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div class="stat-icon purple">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+                <span class="stat-number">{{ horas_semanales }}</span>
+                <span class="stat-label">Horas Semanales</span>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
-/* FILTRO */
-.filtro {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #cbd5e1;
-    margin-top: 5px;
-    width: 200px;
+/* HEADER */
+.schedule-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    border-radius: 12px;
+    color: white;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-/* TABLA */
-.tabla {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
+.header-content h1 {
+    margin: 0 0 5px 0;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.tabla th {
+.header-content p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.view-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.view-btn.active {
+    background: white;
+    color: #667eea;
+}
+
+/* CALENDARIO SEMANAL */
+.calendar-card {
+    padding: 0;
+    overflow-x: auto;
+}
+
+.week-grid {
+    display: grid;
+    grid-template-columns: 80px repeat(5, 1fr);
+    min-width: 800px;
+}
+
+.time-column {
+    background: #f8fafc;
+    border-right: 2px solid #e2e8f0;
+}
+
+.time-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 13px;
+}
+
+.time-slot {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.day-column {
+    border-right: 1px solid #e2e8f0;
+}
+
+.day-column:last-child {
+    border-right: none;
+}
+
+.day-header {
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: #0f172a;
     color: white;
-    padding: 10px;
-    text-align: left;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-.tabla td {
-    padding: 10px;
-    border-bottom: 1px solid #e2e8f0;
+.day-name {
+    font-weight: 600;
+    font-size: 14px;
 }
 
-.tabla tr:hover {
-    background: #f1f5f9;
+.day-date {
+    font-size: 11px;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.day-slots {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(12, 60px);
+}
+
+.class-block {
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 2px;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.class-block:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+.class-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.class-time {
+    font-size: 11px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.class-time::before {
+    content: '🕐';
+}
+
+.class-room {
+    font-size: 10px;
+    opacity: 0.8;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.class-room::before {
+    content: '📍';
+}
+
+/* VISTA LISTA */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.filter-bar label {
+    font-weight: 500;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filtro {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    min-width: 180px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.filtro:hover {
+    border-color: #94a3b8;
+}
+
+.filtro:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.schedule-item:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+.schedule-color {
+    width: 6px;
+    height: 60px;
+    border-radius: 3px;
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-info h4 {
+    margin: 0 0 8px 0;
+    color: #0f172a;
+    font-size: 16px;
+}
+
+.schedule-details {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.schedule-details span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.schedule-details i {
+    color: #94a3b8;
+}
+
+.schedule-badge .badge {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ESTADO VACÍO */
+.empty-schedule {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-schedule i {
+    font-size: 64px;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+}
+
+.empty-schedule h3 {
+    margin: 0 0 10px 0;
+    color: #0f172a;
+    font-size: 20px;
+}
+
+.empty-schedule p {
+    color: #64748b;
+    margin: 0;
+}
+
+/* ESTADÍSTICAS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stat-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: white;
+}
+
+.stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.stat-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 26px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
 }
 
 /* RESPONSIVE */
-@media (max-width: 600px) {
-    .tabla th, .tabla td {
-        padding: 8px;
-        font-size: 13px;
+@media (max-width: 1024px) {
+    .week-grid {
+        grid-template-columns: 70px repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .schedule-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .header-content h1 {
+        font-size: 22px;
+    }
+
+    .calendar-card {
+        border-radius: 12px;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .filtro {
         width: 100%;
     }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .view-btn span {
+        display: none;
+    }
+
+    .schedule-details {
+        flex-direction: column;
+        gap: 8px;
+    }
 }
 </style>
 
 <script>
-document.getElementById('filtroDia').addEventListener('change', function() {
-    const valor = this.value.toLowerCase();
+function cambiarVista(vista) {
+    const vistaSemana = document.getElementById('vistaSemana');
+    const vistaLista = document.getElementById('vistaLista');
+    const botones = document.querySelectorAll('.view-btn');
 
-    document.querySelectorAll('#tablaHorarios tbody tr').forEach(fila => {
-        const dia = fila.querySelector('.dia')?.textContent.toLowerCase() || '';
-        fila.style.display = (valor === '' || dia === valor) ? '' : 'none';
+    botones.forEach(btn => btn.classList.remove('active'));
+
+    if (vista === 'semana') {
+        vistaSemana.style.display = 'block';
+        vistaLista.style.display = 'none';
+        botones[0].classList.add('active');
+    } else {
+        vistaSemana.style.display = 'none';
+        vistaLista.style.display = 'block';
+        botones[1].classList.add('active');
+    }
+}
+
+// FILTRO EN VISTA LISTA
+document.getElementById('filtroDia')?.addEventListener('change', function() {
+    const valor = this.value;
+    const items = document.querySelectorAll('.schedule-item');
+
+    items.forEach(item => {
+        const dia = item.getAttribute('data-dia');
+        item.style.display = (valor === '' || dia === valor) ? 'flex' : 'none';
     });
 });
 </script>
