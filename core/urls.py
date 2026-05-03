@@ -15,7 +15,7 @@ router = DefaultRouter()
 router.register('estudiantes', EstudianteViewSet)
 router.register('cursos', CursoViewSet)
 router.register('calificaciones', CalificacionViewSet)
-router.register('horarios', HorarioViewSet)
+router.register('horario', HorarioViewSet)
 router.register('matriculas', MatriculaViewSet)
 
 # URLS WEB + API

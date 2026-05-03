@@ -153,77 +153,11 @@
     </div>
 </div>
 
-<!-- ANÁLISIS POR CURSO (OPCIONAL) -->
-<div class="card">
-    <div class="card-header-dash">
-        <h3><i class="fas fa-chart-pie"></i> Distribución de Calificaciones</h3>
-    </div>
-
-    <div class="chart-container">
-        <canvas id="gradesChart"></canvas>
-    </div>
-</div>
-
-<!-- TABLA VISTA ALTERNATIVA -->
-<div class="card">
-    <div class="card-header-dash">
-        <h3><i class="fas fa-table"></i> Vista Tabla</h3>
-        <button class="btn-toggle" onclick="toggleTable()">
-            <i class="fas fa-eye"></i> <span id="toggleText">Mostrar</span>
-        </button>
-    </div>
-
-    <div id="tableView" style="display: none;">
-        <div class="table-responsive">
-            <table class="tabla-moderna">
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-book"></i> Curso</th>
-                        <th><i class="fas fa-user"></i> Estudiante</th>
-                        <th><i class="fas fa-star"></i> Calificación</th>
-                        <th><i class="fas fa-info-circle"></i> Estado</th>
-                        <th><i class="fas fa-calendar"></i> Fecha</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    {% for c in calificaciones %}
-                    <tr class="table-row">
-                        <td>
-                            <div class="course-cell">
-                                <div class="course-dot" style="background: {{ c.curso.color|default:'#3b82f6' }}"></div>
-                                <strong>{{ c.curso.nombre }}</strong>
-                            </div>
-                        </td>
-                        <td>{{ c.estudiante.nombre }}</td>
-                        <td>
-                            <span class="grade-badge {% if c.nota >= 7 %}badge-success{% else %}badge-danger{% endif %}">
-                                {{ c.nota|floatformat:1 }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if c.nota >= 7 %}
-                            <span class="status-chip success">
-                                <i class="fas fa-check"></i> Aprobado
-                            </span>
-                            {% else %}
-                            <span class="status-chip danger">
-                                <i class="fas fa-times"></i> Reprobado
-                            </span>
-                            {% endif %}
-                        </td>
-                        <td>{{ c.fecha|date:"d/m/Y"|default:"-" }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 <style>
 /* HEADER */
 .grades-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #0f172a 100%);
     padding: 25px 30px;
     border-radius: 12px;
     color: white;
@@ -839,29 +773,7 @@ function verDetalle(curso, nota) {
     alert(`Curso: ${curso}\nCalificación: ${nota}\n\n(Aquí puedes agregar más detalles)`);
 }
 
-// GRÁFICO DE DISTRIBUCIÓN
-const ctx = document.getElementById('gradesChart');
-if (ctx) {
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Aprobados', 'Reprobados'],
-            datasets: [{
-                data: [{{ cursos_aprobados }}, {{ cursos_reprobados }}],
-                backgroundColor: ['#10b981', '#ef4444'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }
-    });
-}
+
 </script>
 
 {% endblock %}
